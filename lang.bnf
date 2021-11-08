@@ -1,0 +1,10 @@
+program = {statement | block};
+literal =
+    number |
+    string;
+expression =
+    literal |
+    function_call;
+parameter =
+    '()' |
+    '(' expression {',' expression} ')';

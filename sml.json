@@ -1,0 +1,408 @@
+{
+    "type": "sml",
+    "child": [
+        {
+            "type": "define",
+            "child": [
+                {
+                    "type": "identifier",
+                    "child": [
+                        {
+                            "type": "value",
+                            "value": "sml"
+                        }
+                    ]
+                },
+                {
+                    "type": "value",
+                    "value": "="
+                },
+                {
+                    "type": "expression",
+                    "child": [
+                        {
+                            "type": "element",
+                            "child": [
+                                {
+                                    "type": "identifier",
+                                    "child": [
+                                        {
+                                            "type": "value",
+                                            "value": "define"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "brace",
+                                    "child": [
+                                        {
+                                            "type": "expression",
+                                            "child": [
+                                                {
+                                                    "type": "element",
+                                                    "child": [
+                                                        {
+                                                            "type": "str",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "';'"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "identifier",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "define"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "value",
+            "value": ";"
+        },
+        {
+            "type": "define",
+            "child": [
+                {
+                    "type": "identifier",
+                    "child": [
+                        {
+                            "type": "value",
+                            "value": "define"
+                        }
+                    ]
+                },
+                {
+                    "type": "value",
+                    "value": "="
+                },
+                {
+                    "type": "expression",
+                    "child": [
+                        {
+                            "type": "element",
+                            "child": [
+                                {
+                                    "type": "identifier",
+                                    "child": [
+                                        {
+                                            "type": "value",
+                                            "value": "identifier"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "str",
+                                    "child": [
+                                        {
+                                            "type": "value",
+                                            "value": "'='"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "identifier",
+                                    "child": [
+                                        {
+                                            "type": "value",
+                                            "value": "expression"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "value",
+            "value": ";"
+        },
+        {
+            "type": "define",
+            "child": [
+                {
+                    "type": "identifier",
+                    "child": [
+                        {
+                            "type": "value",
+                            "value": "expression"
+                        }
+                    ]
+                },
+                {
+                    "type": "value",
+                    "value": "="
+                },
+                {
+                    "type": "expression",
+                    "child": [
+                        {
+                            "type": "element",
+                            "child": [
+                                {
+                                    "type": "identifier",
+                                    "child": [
+                                        {
+                                            "type": "value",
+                                            "value": "element"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "brace",
+                                    "child": [
+                                        {
+                                            "type": "expression",
+                                            "child": [
+                                                {
+                                                    "type": "element",
+                                                    "child": [
+                                                        {
+                                                            "type": "str",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "'|'"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "identifier",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "element"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "value",
+            "value": ";"
+        },
+        {
+            "type": "define",
+            "child": [
+                {
+                    "type": "identifier",
+                    "child": [
+                        {
+                            "type": "value",
+                            "value": "element"
+                        }
+                    ]
+                },
+                {
+                    "type": "value",
+                    "value": "="
+                },
+                {
+                    "type": "expression",
+                    "child": [
+                        {
+                            "type": "element",
+                            "child": [
+                                {
+                                    "type": "brace",
+                                    "child": [
+                                        {
+                                            "type": "expression",
+                                            "child": [
+                                                {
+                                                    "type": "element",
+                                                    "child": [
+                                                        {
+                                                            "type": "identifier",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "str_s"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "value",
+                                                    "value": "|"
+                                                },
+                                                {
+                                                    "type": "element",
+                                                    "child": [
+                                                        {
+                                                            "type": "identifier",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "str_d"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "value",
+                                                    "value": "|"
+                                                },
+                                                {
+                                                    "type": "element",
+                                                    "child": [
+                                                        {
+                                                            "type": "identifier",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "identifier"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "value",
+                                                    "value": "|"
+                                                },
+                                                {
+                                                    "type": "element",
+                                                    "child": [
+                                                        {
+                                                            "type": "str",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "'('"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "identifier",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "expression"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "str",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "')'"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "value",
+                                                    "value": "|"
+                                                },
+                                                {
+                                                    "type": "element",
+                                                    "child": [
+                                                        {
+                                                            "type": "str",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "'['"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "identifier",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "expression"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "str",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "']'"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "value",
+                                                    "value": "|"
+                                                },
+                                                {
+                                                    "type": "element",
+                                                    "child": [
+                                                        {
+                                                            "type": "str",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "'{'"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "identifier",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "expression"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "str",
+                                                            "child": [
+                                                                {
+                                                                    "type": "value",
+                                                                    "value": "'}'"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
