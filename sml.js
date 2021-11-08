@@ -28,6 +28,9 @@ for (let i = 0; i < args.length; i++) {
         }
     }
 }
+if (args.length == 0) {
+    console.log(`Options\n  --version : Show version\n  <path> : Set input file\n  -o <path> : Set output file (If this option is not set, '<input-file-name>.js' will be set by default)`)
+}
 if (option.filename) {
     compile(option);
 }
