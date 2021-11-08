@@ -8,5 +8,5 @@ element = { str_s
           | brace
           | bracket};
 paren = '(' expression ')';
-brace = '{' expression '}'};
-bracket = '[' expression ']'
+brace = '{' expression '}';
+bracket = '[' expression ']';
