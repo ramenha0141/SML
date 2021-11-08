@@ -1,1 +1,1 @@
-# SML
+# Syntax Markup Language
