@@ -3,7 +3,7 @@ const lexer = require('./lexer.js');
 const Parser = require('./parser.js');
 const Generator = require('./generator.js');
 function compile (option) {
-    const input = fs.readFileSync(option.filename || 'sml.syntax', 'utf-8');
+    const input = fs.readFileSync(option.filename, 'utf-8');
     const tokens = lexer(input);
     const st = Parser.sml(tokens);
     const output = Generator.sml(st)
@@ -28,4 +28,6 @@ for (let i = 0; i < args.length; i++) {
         }
     }
 }
-compile(option);
+if (option.filename) {
+    compile(option);
+}
