@@ -9,4 +9,4 @@ element = { str_s
           | bracket};
 paren = '(' expression ')';
 brace = '{' expression '}'};
-bracket = '[' expression ']';
+bracket = '[' expression ']'
