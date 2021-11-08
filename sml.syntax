@@ -4,6 +4,9 @@ expression = element {'|' element};
 element = { str_s
           | str_d
           | identifier
-          | '(' expression ')'
-          | '[' expression ']'
-          | '{' expression '}'};
+          | paren
+          | brace
+          | bracket};
+paren = '(' expression ')';
+brace = '{' expression '}'};
+bracket = '[' expression ']';

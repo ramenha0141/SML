@@ -27,11 +27,11 @@ Array.prototype.test = function (...elements) {
             if (elements[i][0] == 'paren') {
                 result = result && elements[i][1](_tokens, read);
             } else if (elements[i][0] == 'brace') {
-                while (elements[i][1](__tokens, true)){
+                while (elements[i][1](__tokens, true)) {
                     elements[i][1](_tokens);
                 }
             } else if (elements[i][0] == 'bracket') {
-                if (elements[i][1](__tokens, true)){
+                if (elements[i][1](__tokens, true)) {
                     elements[i][1](_tokens);
                 }
             }
@@ -52,11 +52,11 @@ Array.prototype.parse = function (...elements) {
             if (elements[i][0] == 'paren') {
                 st.child.push(...elements[i][1](tokens).child);
             } else if (elements[i][0] == 'brace') {
-                while (elements[i][1](_tokens, true)){
+                while (elements[i][1](_tokens, true)) {
                     st.child.push(...elements[i][1](tokens).child);
                 }
             } else if (elements[i][0] == 'bracket') {
-                if (elements[i][1](_tokens, true)){
+                if (elements[i][1](_tokens, true)) {
                     st.child.push(...elements[i][1](tokens).child);
                 }
             }
@@ -113,7 +113,7 @@ module.exports = class Parser {
     }
     static element (tokens, read) {
         const st = {type:'element',child:[]};
-        if (tokens.test(['brace', Parser._element_1], true)) {
+        if (tokens.test(['brace', Parser._element_1], read)) {
             tokens.parse(['brace', Parser._element_1], st);
         } else {
             return false;
@@ -123,38 +123,32 @@ module.exports = class Parser {
     static _element_1 (tokens, read) {
         const st = {type:'_element_1',child:[]};
         if (tokens.test(Parser.str_s, true)) {
-            st.child.push(Parser.str_s(tokens));
+            tokens.parse(Parser.str_s, st);
         } else
         if (tokens.test(Parser.str_d, true)) {
-            st.child.push(Parser.str_d(tokens));
+            tokens.parse(Parser.str_d, st);
         } else
         if (tokens.test(Parser.identifier, true)) {
-            st.child.push(Parser.identifier(tokens));
+            tokens.parse(Parser.identifier, st);
         } else
         if (tokens.test(Parser.paren, true)) {
-            st.child.push(Parser.paren(tokens));
+            tokens.parse(Parser.paren, st);
         } else
         if (tokens.test(Parser.brace, true)) {
-            st.child.push(Parser.brace(tokens));
+            tokens.parse(Parser.brace, st);
         } else
         if (tokens.test(Parser.bracket, true)) {
-            st.child.push(Parser.bracket(tokens));
+            tokens.parse(Parser.bracket, st);
         } else
         {
-            if (read) {
-                return false;
-            } else {
-                console.log('Syntax error: element expected.');
-            }
+            return false;
         }
         return st;
     }
     static paren (tokens, read) {
         const st = {type:'paren',child:[]};
         if (tokens.test('(', Parser.expression, ')', read)) {
-            tokens.next();
-            st.child.push(Parser.expression(tokens));
-            tokens.next();
+            tokens.parse('(', Parser.expression, ')', st);
         } else {
             return false;
         }
@@ -163,9 +157,7 @@ module.exports = class Parser {
     static brace (tokens, read) {
         const st = {type:'brace',child:[]};
         if (tokens.test('{', Parser.expression, '}', read)) {
-            tokens.next();
-            st.child.push(Parser.expression(tokens));
-            tokens.next();
+            tokens.parse('{', Parser.expression, '}', st);
         } else {
             return false;
         }
@@ -174,9 +166,7 @@ module.exports = class Parser {
     static bracket (tokens, read) {
         const st = {type:'bracket',child:[]};
         if (tokens.test('[', Parser.expression, ']', read)) {
-            tokens.next();
-            st.child.push(Parser.expression(tokens));
-            tokens.next();
+            tokens.parse('[', Parser.expression, ']', st);
         } else {
             return false;
         }
@@ -221,4 +211,4 @@ module.exports = class Parser {
         }
         return st;
     }
-}
+};

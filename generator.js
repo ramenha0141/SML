@@ -68,7 +68,67 @@ Array.prototype.parse = function (...elements) {
 `;
 const defines = [];
 module.exports = class Generator {
-    sml (st) {
-        
+    static sml (st) {
+        for (let i = 0; i < st.child.length; i++) {
+            if (i % 2 == 0) {
+                Generator.define(st.child[i]);
+            }
+        }
+        return `${header}module.exports = class Parser {\n${defines.join('')}}`;
+    }
+    static define (st) {
+        const identifier = st.child[0].child[0].value;
+        const expression = st.child[2];
+        let id = 1;
+        defines.push(`static ${identifier} (tokens, read){\nconst st = {type:'${identifier}',child:[]};\n${Generator.expression(expression, identifier, id)}return st;\n}\n`);
+    }
+    static expression (st, identifier, id) {
+        const elements = [];
+        for (let i = 0; i < st.child.length; i++) {
+            if (i % 2 == 0) {
+                elements.push(st.child[i]);
+            }
+        }
+        let ret = '';
+        for (let i = 0; i < elements.length; i++) {
+            const tmp = Generator.element(elements[i], identifier, id);
+            ret += `if (tokens.test(${tmp}, ${elements.length == 1 ? 'read' : 'true'})) {\ntokens.parse(${tmp}, st);\n} else `;
+        }
+        return `${ret}{\nreturn false;\n}\n`;
+    }
+    static element (st, identifier, id) {
+        const factors = [];
+        for (let i = 0; i < st.child.length; i++) {
+            const factor = st.child[i];
+            switch (factor.type) {
+                case 'str' : {
+                    factors.push(factor.child[0].value);
+                    break;
+                }
+                case 'identifier' : {
+                    factors.push(`Parser.${factor.child[0].value}`);
+                    break;
+                }
+                case 'paren' : {
+                    factors.push(`['paren', Parser._${identifier}_${id}]`);
+                    Generator.define({child:[`_${identifier}_${id++}`, factor.child[0]]});
+                    break;
+                }
+                case 'brace' : {
+                    factors.push(`['brace', Parser._${identifier}_${id}]`);
+                    Generator.define({child:[{child:[{value:`_${identifier}_${id++}`}]}, '=', factor.child[1]]});
+                    break;
+                }
+                case 'bracket' : {
+                    factors.push(`['bracket', Parser._${identifier}_${id}]`);
+                    Generator.define({child:[`_${identifier}_${id++}`, factor.child[0]]});
+                    break;
+                }
+                default : {
+                    console.log('error');
+                }
+            }
+        }
+        return factors.join(', ');
     }
 }
