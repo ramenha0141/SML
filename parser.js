@@ -24,8 +24,16 @@ Array.prototype.test = function (...elements) {
             result = result && elements[i](_tokens, read);
         } else if (typeof elements[i] == 'object') {
             const __tokens = _tokens.slice();
-            while (elements[i][0](__tokens, true)){
-                elements[i][0](_tokens);
+            if (elements[i][0] == 'paren') {
+                result = result && elements[i][1](_tokens, read);
+            } else if (elements[i][0] == 'brace') {
+                while (elements[i][1](__tokens, true)){
+                    elements[i][1](_tokens);
+                }
+            } else if (elements[i][0] == 'bracket') {
+                if (elements[i][1](__tokens, true)){
+                    elements[i][1](_tokens);
+                }
             }
         } else {
             result = result && elements[i].nextif(_tokens, read);
@@ -41,32 +49,36 @@ Array.prototype.parse = function (...elements) {
             st.child.push(elements[i](tokens));
         } else if (typeof elements[i] == 'object') {
             const _tokens = tokens.slice();
-            while (elements[i][0](_tokens, true)){
-                st.child.push(elements[i][0](tokens));
+            if (elements[i][0] == 'paren') {
+                st.child.push(...elements[i][1](tokens).child);
+            } else if (elements[i][0] == 'brace') {
+                while (elements[i][1](_tokens, true)){
+                    st.child.push(...elements[i][1](tokens).child);
+                }
+            } else if (elements[i][0] == 'bracket') {
+                if (elements[i][1](_tokens, true)){
+                    st.child.push(...elements[i][1](tokens).child);
+                }
             }
         } else {
-            st.child.push(elements[i].nextif(_tokens));
+            st.child.push(elements[i].nextif(tokens));
         }
     }
 }
 module.exports = class Parser {
     static sml (tokens, read) {
         const st = {type:'sml',child:[]};
-        if (tokens.test(Parser.define, [Parser._sml_1], read)) {
-            tokens.parse(Parser.define, st);
+        if (tokens.test(Parser.define, ['brace', Parser._sml_1], read)) {
+            tokens.parse(Parser.define, ['brace', Parser._sml_1], st);
         } else {
             return false;
-        }
-        while (tokens.test(Parser._sml_1, true)){
-            st.child.push(...Parser._sml_1(tokens).child);
         }
         return st;
     }
     static _sml_1 (tokens, read) {
         const st = {type:'_sml_1',child:[]};
         if (tokens.test(';', Parser.define, read)) {
-            st.child.push(tokens.next());
-            st.child.push(Parser.define(tokens));
+            tokens.parse(';', Parser.define, st);
         } else {
             return false;
         }
@@ -75,9 +87,7 @@ module.exports = class Parser {
     static define (tokens, read) {
         const st = {type:'define',child:[]};
         if (tokens.test(Parser.identifier, '=', Parser.expression, read)) {
-            st.child.push(Parser.identifier(tokens));
-            st.child.push(tokens.next());
-            st.child.push(Parser.expression(tokens));
+            tokens.parse(Parser.identifier, '=', Parser.expression, st);
         } else {
             return false;
         }
@@ -85,21 +95,28 @@ module.exports = class Parser {
     }
     static expression (tokens, read) {
         const st = {type:'expression',child:[]};
-        if (tokens.test(Parser.element, read)) {
-            st.child.push(Parser.element(tokens));
+        if (tokens.test(Parser.element, ['brace', Parser._expression_1], read)) {
+            tokens.parse(Parser.element, ['brace', Parser._expression_1], st);
         } else {
             return false;
         }
-        while (tokens.test('|', Parser.element, true)) {
-            st.child.push(tokens.next());
-            st.child.push(Parser.element(tokens));
+        return st;
+    }
+    static _expression_1 (tokens, read) {
+        const st = {type:'_expression_1',child:[]};
+        if (tokens.test('|', Parser.element, read)) {
+            tokens.parse('|', Parser.element, st);
+        } else {
+            return false;
         }
         return st;
     }
     static element (tokens, read) {
         const st = {type:'element',child:[]};
-        while (tokens.test(Parser._element_1, true)) {
-            st.child.push(...Parser._element_1(tokens).child);
+        if (tokens.test(['brace', Parser._element_1], true)) {
+            tokens.parse(['brace', Parser._element_1], st);
+        } else {
+            return false;
         }
         return st;
     }
