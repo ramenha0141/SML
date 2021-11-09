@@ -1,2 +1,2 @@
 @echo off
-node sml.js %*
+node %~dp0sml.js %*
