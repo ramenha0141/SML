@@ -10,7 +10,7 @@ function compile (option) {
     fs.writeFileSync(option.outputfilename || `${option.filename}.js`, output);
 }
 const args = process.argv.slice(2);
-const option = {filename:'D:\\Projects\\Frontline\\frontline.syntax'};
+const option = {};
 for (let i = 0; i < args.length; i++) {
     const arg = args[i];
     switch (arg) {
