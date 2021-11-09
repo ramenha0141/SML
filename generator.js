@@ -71,15 +71,14 @@ module.exports = class Generator {
     static sml (st) {
         for (let i = 0; i < st.child.length; i++) {
             if (i % 2 == 0) {
-                Generator.define(st.child[i]);
+                Generator.define(st.child[i], 1);
             }
         }
         return `${header}module.exports = class Parser {\n${defines.join('')}}`;
     }
-    static define (st) {
+    static define (st, id) {
         const identifier = st.child[0].child[0].value;
         const expression = st.child[2];
-        let id = 1;
         defines.push(`static ${identifier} (tokens, read){\nconst st = {type:'${identifier}',child:[]};\n${Generator.expression(expression, identifier, id)}return st;\n}\n`);
     }
     static expression (st, identifier, id) {
@@ -111,17 +110,17 @@ module.exports = class Generator {
                 }
                 case 'paren' : {
                     factors.push(`['paren', Parser._${identifier}_${id}]`);
-                    Generator.define({child:[{child:[{value:`_${identifier}_${id++}`}]}, '=', factor.child[1]]});
+                    Generator.define({child:[{child:[{value:`_${identifier}_${id}`}]}, '=', factor.child[1]]}, id++);
                     break;
                 }
                 case 'brace' : {
                     factors.push(`['brace', Parser._${identifier}_${id}]`);
-                    Generator.define({child:[{child:[{value:`_${identifier}_${id++}`}]}, '=', factor.child[1]]});
+                    Generator.define({child:[{child:[{value:`_${identifier}_${id}`}]}, '=', factor.child[1]]}, id++);
                     break;
                 }
                 case 'bracket' : {
                     factors.push(`['bracket', Parser._${identifier}_${id}]`);
-                    Generator.define({child:[{child:[{value:`_${identifier}_${id++}`}]}, '=', factor.child[1]]});
+                    Generator.define({child:[{child:[{value:`_${identifier}_${id}`}]}, '=', factor.child[1]]}, id++);
                     break;
                 }
                 default : {
