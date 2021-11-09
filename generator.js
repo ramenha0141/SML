@@ -111,7 +111,7 @@ module.exports = class Generator {
                 }
                 case 'paren' : {
                     factors.push(`['paren', Parser._${identifier}_${id}]`);
-                    Generator.define({child:[`_${identifier}_${id++}`, factor.child[0]]});
+                    Generator.define({child:[{child:[{value:`_${identifier}_${id++}`}]}, '=', factor.child[1]]});
                     break;
                 }
                 case 'brace' : {
@@ -121,7 +121,7 @@ module.exports = class Generator {
                 }
                 case 'bracket' : {
                     factors.push(`['bracket', Parser._${identifier}_${id}]`);
-                    Generator.define({child:[`_${identifier}_${id++}`, factor.child[0]]});
+                    Generator.define({child:[{child:[{value:`_${identifier}_${id++}`}]}, '=', factor.child[1]]});
                     break;
                 }
                 default : {
