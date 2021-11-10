@@ -65,7 +65,6 @@ Array.prototype.parse = function (...elements) {
         }
     }
 }
-const a = 0;
 `;
 const defines = [];
 module.exports = class Generator {
