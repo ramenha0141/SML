@@ -4,9 +4,10 @@ const Parser = require('./parser.js');
 const Generator = require('./generator.js');
 function compile (option) {
     const input = fs.readFileSync(option.filename, 'utf-8');
+    const include = option.include ? fs.readFileSync(option.include, 'utf-8') : '';
     const tokens = lexer(input);
     const st = Parser.sml(tokens);
-    const output = Generator.sml(st)
+    const output = Generator.sml(st, include);
     fs.writeFileSync(option.outputfilename || `${option.filename}.js`, output);
 }
 const args = process.argv.slice(2);
@@ -16,6 +17,11 @@ for (let i = 0; i < args.length; i++) {
     switch (arg) {
         case '--version' : {
             console.log('SML Compiler 1.0');
+            break;
+        }
+        case '-i' : {
+            i++;
+            option.include = arg[i];
             break;
         }
         case '-o' : {

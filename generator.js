@@ -68,13 +68,13 @@ Array.prototype.parse = function (...elements) {
 `;
 const defines = [];
 module.exports = class Generator {
-    static sml (st) {
+    static sml (st, include) {
         for (let i = 0; i < st.child.length; i++) {
             if (i % 2 == 0) {
                 Generator.define(st.child[i]);
             }
         }
-        return `${header}module.exports = class Parser {\r\n${defines.join('')}}`;
+        return `${header}module.exports = class Parser {\r\n${defines.join('')}${include}}`;
     }
     static define (st) {
         const identifier = st.child[0].child[0].value;
