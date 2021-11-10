@@ -80,7 +80,7 @@ module.exports = class Generator {
         const identifier = st.child[0].child[0].value;
         const expression = st.child[2];
         let id = [1];
-        defines.push(`static ${identifier} (tokens, read){\nconst st = {type:'${identifier}',child:[]};\n${Generator.expression(expression, identifier, id)}return st;\n}\n`);
+        defines.push(`    static ${identifier} (tokens, read) {\n        const st = {type:'${identifier}',child:[]};\n        ${Generator.expression(expression, identifier, id)}        return st;\n    }\n`);
     }
     static expression (st, identifier, id) {
         const elements = [];
@@ -92,9 +92,9 @@ module.exports = class Generator {
         let ret = '';
         for (let i = 0; i < elements.length; i++) {
             const tmp = Generator.element(elements[i], identifier, id);
-            ret += `if (tokens.test(${tmp}, ${elements.length == 1 ? 'read' : 'true'})) {\ntokens.parse(${tmp}, st);\n} else `;
+            ret += `if (tokens.test(${tmp}, ${elements.length == 1 ? 'read' : 'true'})) {\n            tokens.parse(${tmp}, st);\n        } else `;
         }
-        return `${ret}{\nreturn false;\n}\n`;
+        return `${ret}{\n            return false;\n        }\n`;
     }
     static element (st, identifier, id) {
         const factors = [];
