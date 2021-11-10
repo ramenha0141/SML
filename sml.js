@@ -21,7 +21,7 @@ for (let i = 0; i < args.length; i++) {
         }
         case '-i' : {
             i++;
-            option.include = arg[i];
+            option.include = args[i];
             break;
         }
         case '-o' : {

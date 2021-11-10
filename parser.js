@@ -124,23 +124,17 @@ module.exports = class Parser {
         const st = {type:'_element_1',child:[]};
         if (tokens.test(Parser.str_s, true)) {
             tokens.parse(Parser.str_s, st);
-        } else
-        if (tokens.test(Parser.str_d, true)) {
+        } else if (tokens.test(Parser.str_d, true)) {
             tokens.parse(Parser.str_d, st);
-        } else
-        if (tokens.test(Parser.identifier, true)) {
+        } else if (tokens.test(Parser.identifier, true)) {
             tokens.parse(Parser.identifier, st);
-        } else
-        if (tokens.test(Parser.paren, true)) {
+        } else if (tokens.test(Parser.paren, true)) {
             tokens.parse(Parser.paren, st);
-        } else
-        if (tokens.test(Parser.brace, true)) {
+        } else if (tokens.test(Parser.brace, true)) {
             tokens.parse(Parser.brace, st);
-        } else
-        if (tokens.test(Parser.bracket, true)) {
+        } else if (tokens.test(Parser.bracket, true)) {
             tokens.parse(Parser.bracket, st);
-        } else
-        {
+        } else {
             return false;
         }
         return st;

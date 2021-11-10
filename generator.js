@@ -74,7 +74,7 @@ module.exports = class Generator {
                 Generator.define(st.child[i]);
             }
         }
-        return `${header}module.exports = class Parser {\r\n${defines.join('')}${include}}`;
+        return `${header}module.exports = class Parser {\r\n${defines.join('')}${include}\r\n};`;
     }
     static define (st) {
         const identifier = st.child[0].child[0].value;
