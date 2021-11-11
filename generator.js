@@ -1,3 +1,8 @@
+function log (data) {
+    process.stdout.moveCursor(0, -1);
+    process.stdout.clearLine(0);
+    process.stdout.write(data + '\n');
+}
 const header = `Array.prototype.read = function (entry = 0) {
     return this[entry];
 }
@@ -74,12 +79,14 @@ module.exports = class Generator {
                 Generator.define(st.child[i]);
             }
         }
+        log(`Successfully Generated ${st.child.length} defines`);
         return `${header}module.exports = class Parser {\r\n${defines.join('')}${include}\r\n};`;
     }
     static define (st) {
         const identifier = st.child[0].child[0].value;
         const expression = st.child[2];
         let id = [1];
+        log(`Generate : ${identifier}`);
         defines.push(`    static ${identifier} (tokens, read) {\r\n        const st = {type:'${identifier}',child:[]};\r\n        ${Generator.expression(expression, identifier, id)}        return st;\r\n    }\r\n`);
     }
     static expression (st, identifier, id) {

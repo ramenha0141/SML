@@ -1,3 +1,8 @@
+function log (data) {
+    process.stdout.moveCursor(0, -1);
+    process.stdout.clearLine(0);
+    process.stdout.write(data + '\n');
+}
 Array.prototype.read = function (entry = 0) {
     return this[entry];
 }
@@ -73,6 +78,7 @@ module.exports = class Parser {
         } else {
             return false;
         }
+        log(`Successfully Parsed ${st.child.length} defines\r\n`);
         return st;
     }
     static _sml_1 (tokens, read) {
@@ -91,6 +97,7 @@ module.exports = class Parser {
         } else {
             return false;
         }
+        log(`Parsing : ${st.child[0].child[0].value}`);
         return st;
     }
     static expression (tokens, read) {

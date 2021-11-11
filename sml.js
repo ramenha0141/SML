@@ -3,6 +3,7 @@ const lexer = require('./lexer.js');
 const Parser = require('./parser.js');
 const Generator = require('./generator.js');
 function compile (option) {
+    console.log(`\nCompile options:\n  input: ${option.filename},\n  ${option.include ? `include: ${option.include},\n  ` : ''}output: ${option.outputfilename || `${option.filename}.js`}\n`);
     const input = fs.readFileSync(option.filename, 'utf-8');
     const include = option.include ? fs.readFileSync(option.include, 'utf-8') : '';
     const tokens = lexer(input);
