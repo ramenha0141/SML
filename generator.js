@@ -27,10 +27,16 @@ Array.prototype.test = function (...elements) {
     for (let i = 0; i < elements.length; i++) {
         if (typeof elements[i] == 'function') {
             result = result && elements[i](_tokens, read);
+            if (!result) {
+                break;
+            }
         } else if (typeof elements[i] == 'object') {
             const __tokens = _tokens.slice();
             if (elements[i][0] == 'paren') {
                 result = result && elements[i][1](_tokens, read);
+                if (!result) {
+                    break;
+                }
             } else if (elements[i][0] == 'brace') {
                 while (elements[i][1](__tokens, true)){
                     elements[i][1](_tokens);
@@ -42,6 +48,9 @@ Array.prototype.test = function (...elements) {
             }
         } else {
             result = result && elements[i].nextif(_tokens, read);
+            if (!result) {
+                break;
+            }
         }
     }
     return result;
