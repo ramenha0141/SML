@@ -1,8 +1,13 @@
 const fs = require('fs');
 const lexer = require('./lexer.js');
 const Parser = require('./parser.js');
-const Generator = require('./generator.js');
-function compile (option) {
+function compile_ll (option) {
+    const input = fs.readFileSync(option.filename, 'utf-8');
+    const tokens = lexer(input);
+    const st = Parser.sml(tokens);
+}
+function compile_rd (option) {
+    const Generator = require('./generator.js');
     console.log(`\nCompile options:\n  input: ${option.filename},\n  ${option.include ? `include: ${option.include},\n  ` : ''}output: ${option.outputfilename || `${option.filename}.js`}\n`);
     const input = fs.readFileSync(option.filename, 'utf-8');
     const include = option.include ? fs.readFileSync(option.include, 'utf-8') : '';
@@ -30,14 +35,26 @@ for (let i = 0; i < args.length; i++) {
             option.outputfilename = args[i];
             break;
         }
+        case '--mode=ll' : {
+            option.mode = 'll';
+            break;
+        }
+        case '--mode=rd' : {
+            option.mode = 'rd';
+            break;
+        }
         default : {
             option.filename = arg;
         }
     }
 }
 if (args.length == 0) {
-    console.log(`Options\n  --version : Show version\n  <path> : Set input file\n  -o <path> : Set output file (If this option is not set, '<input-file-name>.js' will be set by default)`)
+    console.log(`Options\n  --version : Show version\n  <path> : Set input file\n  -o <path> : Set output file (If this option is not set, '<input-file-name>.<json/js>' will be set by default)`)
 }
 if (option.filename) {
-    compile(option);
+    if (option.mode === 'rd') {
+        compile_rd(option);
+    } else {
+        compile_ll(option);
+    }
 }
