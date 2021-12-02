@@ -2,9 +2,11 @@ const fs = require('fs');
 const lexer = require('./lexer.js');
 const Parser = require('./parser.js');
 function compile_ll (option) {
+    const abstractor = require('./abstractor.js');
     const input = fs.readFileSync(option.filename, 'utf-8');
     const tokens = lexer(input);
     const st = Parser.sml(tokens);
+    const ast = abstractor(st);
 }
 function compile_rd (option) {
     const Generator = require('./generator.js');
