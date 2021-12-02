@@ -6,7 +6,15 @@ module.exports = function (st) {
     }
 }
 function define (st) {
-    const ast = {};
-    ast.identifier = st.child[0];
+    const ast = [];
+    for (let i = 0; i < st.child[3].child.length; i++) {
+        if (i % 2 === 0) {
+            ast.push(expression(st.child[3].child[i]));
+        }
+    }
+    return {identifier:st.child[0], value:ast};
+}
+function expression (st) {
+    const ast = [];
     
 }
