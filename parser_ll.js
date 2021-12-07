@@ -1,17 +1,22 @@
 module.exports = parser = function (tokens, parsing_table) {
-    const stack = [['S']];
-    const parsed_tokens = [];
+    const stack = [['S'], ['$']];
     const rules = [];
-    const state = 0;
     while (stack.length > 0) {
-        if (typeof stack[0] === 'object') {
-            const symbol = stack.shift()[0];
-            stack.unshift(...parsing_table[symbol][tokens[0]]);
+        if (stack[0][0] === '$') {
+            const symbol = stack.shift();
+            if (tokens[0][0] === '$') {
+                return rules;
+            } else {
+                console.error('Parsing Error');
+            }
+        } else if (!(typeof stack[0] === 'string')) {
+            const symbol = stack.shift();
+            stack.unshift(...parsing_table[symbol[0]][tokens[0]]);
             rules.push(symbol);
         } else {
             const token = stack.shift();
             if (tokens[0] === token) {
-                parsed_tokens.push(tokens.shift());
+                rules.push(tokens.shift());
             } else {
                 console.error(`${tokens.shift()} != ${token}`);
             }
@@ -19,7 +24,7 @@ module.exports = parser = function (tokens, parsing_table) {
     }
     return rules;
 }
-const tokens = ['a' ,'b', 'c'];
+const tokens = ['a' ,'b', 'c', ['$']];
 const parsing_table = {
     'S' : {
         'a' : [['A']],
