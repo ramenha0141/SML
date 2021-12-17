@@ -1,7 +1,7 @@
 module.exports = parser = function (tokens, parsing_table) {
     const stack = [['S']];
     const rules = [];
-    tokens.push({type:'$',value:''});
+    tokens.push({type:'$'});
     while (stack.length > 0) {
         if (typeof stack[0] === 'object') {
             const symbol = stack.shift();
