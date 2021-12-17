@@ -4,6 +4,7 @@ module.exports = parser = function (tokens, parsing_table) {
     tokens.push({type:'$'});
     while (stack.length > 0) {
         if (typeof stack[0] === 'object') {
+            // 非終端記号
             const symbol = stack.shift();
             if (tokens[0].type === undefined) {
                 stack.unshift(...parsing_table[symbol[0]][tokens[0].value]);
@@ -13,6 +14,7 @@ module.exports = parser = function (tokens, parsing_table) {
                 rules.push(symbol);
             }
         } else if (typeof stack[0] === 'string') {
+            // 終端記号
             const symbol = stack.shift();
             if (tokens[0].value === symbol) {
                 rules.push(tokens.shift().value);
@@ -20,15 +22,20 @@ module.exports = parser = function (tokens, parsing_table) {
                 console.error(`${tokens.shift().value} token is not ${symbol}`);
             }
         } else if (typeof stack[0] === 'symbol') {
+            // 特殊終端記号
             const symbol = stack.shift();
             if (tokens[0].type === Symbol.keyFor(symbol)) {
                 rules.push(tokens.shift().value);
             } else {
                 console.error(`${tokens.shift().value} token type is not ${Symbol.keyFor(symbol)}`);
             }
+        } else if (stack[0] === undefined) {
+            // リターン記号
+            const symbol = stack.shift();
+            rules.push([undefined]);
         }
     }
-    return rules.slice(0, -1);
+    return rules;
 }
 const $ = {number: Symbol.for('number'), $: Symbol.for('$')};
 const tokens = [{type:'number',value:'1'},{value:'+'},{type:'number',value:'2'},{value:'-'},{type:'number',value:'3'}];
