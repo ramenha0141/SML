@@ -1,4 +1,5 @@
 module.exports = parser = function (tokens, parsing_table) {
+    // LL法構文解析
     const stack = [['S']];
     const rules = [];
     tokens.push({type:'$'});
@@ -37,17 +38,16 @@ module.exports = parser = function (tokens, parsing_table) {
             rules.push([undefined]);
         }
     }
-    console.log(rules);
-    function tree() {
-        const st = [];
+    // ST構築
+    function tree(type) {
+        const st = {type: type, child: []};
         while (rules.length > 0) {
             if (typeof rules[0] === 'string') {
-                st.push(rules.shift());
+                st.child.push(rules.shift());
             } else if (typeof rules[0][0] === 'string') {
-                rules.shift();
-                const _st = tree();
-                if (_st.length > 0) {
-                    st.push(_st);
+                const _st = tree(rules.shift()[0]);
+                if (_st.child.length > 0) {
+                    st.child.push(_st);
                 }
             } else if (rules[0][0] === undefined) {
                 rules.shift();
@@ -56,7 +56,7 @@ module.exports = parser = function (tokens, parsing_table) {
         }
         return st;
     }
-    return JSON.stringify(tree());
+    return tree().child[0];
 }
 const $ = {number: Symbol.for('number'), $: Symbol.for('$')};
 const tokens = [{type:'number',value:'1'},{value:'+'},{type:'number',value:'2'},{value:'-'},{type:'number',value:'3'}];
@@ -73,4 +73,4 @@ const parsing_table = {
         [$.$] : [$.$]
     }
 };
-console.log(parser(tokens, parsing_table));
+console.log(JSON.stringify(parser(tokens, parsing_table)));
