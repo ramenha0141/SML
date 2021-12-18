@@ -63,7 +63,6 @@ function parser(tokens, parsing_table) {
     return tree().child[0];
 }
 const $ = { identifier: Symbol.for('identifier'), string: Symbol.for('string'), $: Symbol.for('$') };
-const tokens = [{type: 'identifier', value: 'def'}, '=', {type: 'string', value: "'str'"}, {type: 'identifier', value: 'def2'}, '|', '(', {type: 'string', value: "'str2'"}, ')', ';'];
 const parsing_table = {
     'S': {
         [$.identifier]: [['sml'], $.$]
