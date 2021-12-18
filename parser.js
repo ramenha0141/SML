@@ -7,8 +7,8 @@ function parser(tokens, parsing_table) {
         if (typeof stack[0] === 'object') {
             // 非終端記号
             const symbol = stack.shift();
-            if (tokens[0].type === undefined) {
-                stack.unshift(...parsing_table[symbol[0]][tokens[0].value], undefined);
+            if (typeof tokens[0] === 'string') {
+                stack.unshift(...parsing_table[symbol[0]][tokens[0]], undefined);
                 rules.push(symbol);
             } else {
                 stack.unshift(...parsing_table[symbol[0]][Symbol.for(tokens[0].type)], undefined);
@@ -17,10 +17,10 @@ function parser(tokens, parsing_table) {
         } else if (typeof stack[0] === 'string') {
             // 終端記号
             const symbol = stack.shift();
-            if (tokens[0].value === symbol) {
-                rules.push(tokens.shift().value);
+            if (typeof tokens[0] === 'string' ? tokens[0] === symbol : tokens[0].value === symbol) {
+                rules.push(typeof tokens[0] === 'string' ? tokens.shift() : tokens.shift().value);
             } else {
-                console.error(`${tokens.shift().value} token is not ${symbol}`);
+                console.error(`${typeof tokens[0] === 'string' ? tokens[0] : tokens[0].value} token is not ${symbol}`);
             }
         } else if (stack[0] === Symbol.for('$')) {
             stack.shift();
@@ -63,7 +63,7 @@ function parser(tokens, parsing_table) {
     return tree().child[0];
 }
 const $ = { identifier: Symbol.for('identifier'), string: Symbol.for('string') };
-const tokens = [{type: 'identifier', value: 'def'}, {value: '='}, {type: 'string', value: "'str'"}, {type: 'identifier', value: 'def2'}, {value: '|'}, {value: '('}, {type: 'string', value: "'str2'"}, {value: ')'}, {value: ';'}];
+const tokens = [{type: 'identifier', value: 'def'}, '=', {type: 'string', value: "'str'"}, {type: 'identifier', value: 'def2'}, '|', '(', {type: 'string', value: "'str2'"}, ')', ';'];
 const parsing_table = {
     'S': {
         [$.identifier]: [['sml'], $.$]
@@ -128,3 +128,6 @@ const parsing_table = {
     },
 };
 console.log(JSON.stringify(parser(tokens, parsing_table)));
+//module.exports = function (tokens) {
+//    return parser(tokens, parsing_table);
+//}
