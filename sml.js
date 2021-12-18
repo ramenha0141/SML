@@ -1,7 +1,7 @@
 const fs = require('fs');
 const lexer = require('./lexer.js');
 const Parser = require('./parser.js');
-function compile (option) {
+function compile(option) {
     try {
         const input = fs.readFileSync(option.filename, 'utf-8');
         const tokens = lexer(input);
@@ -12,20 +12,20 @@ function compile (option) {
     }
 }
 const args = process.argv.slice(2);
-const option = {filename: 'sml.syntax'};
+const option = {};
 for (let i = 0; i < args.length; i++) {
     const arg = args[i];
     switch (arg) {
-        case '--version' : {
+        case '--version': {
             console.log('SML Compiler 1.0');
             break;
         }
-        case '-o' : {
+        case '-o': {
             i++;
             option.outputfilename = args[i];
             break;
         }
-        default : {
+        default: {
             option.filename = arg;
         }
     }

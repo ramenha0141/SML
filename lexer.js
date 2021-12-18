@@ -6,11 +6,11 @@ module.exports = function (code) {
         const token = _tokens[i];
         switch (true) {
             case /^("(?:\\[\s\S]|[^"\r\n\\])*"|'(?:\\[\s\S]|[^'\r\n\\])*')$/.test(token): {
-                tokens.push({type: 'string', value: token});
+                tokens.push({ type: 'string', value: token });
                 break;
             }
             case /^([@a-zA-Z\-_][a-zA-Z\-_]*)$/.test(token): {
-                tokens.push({type: 'identifier', value: token});
+                tokens.push({ type: 'identifier', value: token });
                 break;
             }
             case /^\s*$/.test(token): {

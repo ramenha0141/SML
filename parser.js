@@ -20,7 +20,7 @@ function parser(tokens, parsing_table) {
                     rules.push(symbol);
                 } else {
                     if (tokens[0].type === '$') {
-                        throw `SyntaxError: Unexpected end of file.`
+                        throw `SyntaxError: Unexpected end of file.`;
                     } else {
                         throw `SyntaxError: Unexpected token '${tokens[0].value}'.`;
                     }
