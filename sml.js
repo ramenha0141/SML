@@ -8,7 +8,7 @@ function compile (option) {
     console.log(JSON.stringify(st));
 }
 const args = process.argv.slice(2);
-const option = {filename: 'old/sml.syntax'};
+const option = {filename: 'sml.syntax'};
 for (let i = 0; i < args.length; i++) {
     const arg = args[i];
     switch (arg) {

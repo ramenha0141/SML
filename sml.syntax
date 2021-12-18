@@ -3,7 +3,7 @@ _sml = define ';' _sml | ε;
 define = @identifier '=' expression;
 expression = element _expression;
 _expression = '|' element _expression | ε;
-element = _element;
+element = _element | 'ε';
 _element = string _element
          | identifier _element
          | paren _element

@@ -97,7 +97,8 @@ const parsing_table = {
         [$.identifier]: [['_element']],
         '(': [['_element']],
         '{': [['_element']],
-        '{': [['_element']]
+        '{': [['_element']],
+        'ε': ['ε']
     },
     '_element': {
         [$.string]: [['string'], ['_element']],
