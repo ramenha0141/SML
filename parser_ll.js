@@ -1,8 +1,8 @@
-function parser (tokens, parsing_table) {
+function parser(tokens, parsing_table) {
     // LL法構文解析
     const stack = [['S']];
     const rules = [];
-    tokens.push({type:'$'});
+    tokens.push({ type: '$' });
     while (stack.length > 0) {
         if (typeof stack[0] === 'object') {
             // 非終端記号
@@ -40,7 +40,7 @@ function parser (tokens, parsing_table) {
     }
     // ST構築
     function tree(type) {
-        const st = {type: type, child: []};
+        const st = { type: type, child: [] };
         while (rules.length > 0) {
             if (typeof rules[0] === 'string') {
                 st.child.push(rules.shift());
@@ -62,19 +62,63 @@ function parser (tokens, parsing_table) {
     }
     return tree().child[0];
 }
-const $ = {number: Symbol.for('number'), $: Symbol.for('$')};
-const tokens = [{type:'number',value:'1'},{value:'+'},{type:'number',value:'2'},{value:'-'},{type:'number',value:'3'}];
+const $ = { identifier: Symbol.for('identifier'), string: Symbol.for('string') };
+const tokens = [{type: 'identifier', value: 'def'}, {value: '='}, {type: 'string', value: 'str'}, {type: 'identifier', value: 'def2'}, {value: '|'}, {value: '('}, {type: 'string', value: 'str2'}, {value: ')'}, {value: ';'}];
 const parsing_table = {
-    'S' : {
-        [$.number] : [['exp']]
+    'S': {
+        [$.identifier]: [['sml'], $.$]
     },
-    'exp' : {
-        [$.number] : [$.number, ['_exp']]
+    'sml': {
+        [$.identifier]: [['_sml']]
     },
-    '_exp' : {
-        '+' : ['+', $.number, ['_exp']],
-        '-' : ['-', $.number, ['_exp']],
-        [$.$] : [$.$]
-    }
+    '_sml': {
+        [$.identifier]: [['define'], ';' ['_sml']],
+        [$.$]: []
+    },
+    'define': {
+        [$.identifier]: [$.identifier, '=', ['expression']]
+    },
+    'expression': {
+        [$.string]: [['element'], ['_expression']],
+        [$.identifier]: [['element'], ['_expression']],
+        '(': [['element'], ['_expression']],
+        '{': [['element'], ['_expression']],
+        '[': [['element'], ['_expression']]
+    },
+    '_expression': {
+        '|': ['|', ['element'], ['_expression']],
+        ';': [],
+        ')': [],
+        '}': [],
+        ']': []
+    },
+    'element': {
+        [$.string]: [['_element']],
+        [$.identifier]: [['_element']],
+        '(': [['_element']],
+        '{': [['_element']],
+        '{': [['_element']]
+    },
+    '_element': {
+        [$.string]: [$.string, ['_element']],
+        [$.identifier]: [$.identifier, ['_element']],
+        '(': [['paren'], ['_element']],
+        '{': [['brace'], ['_element']],
+        '[': [['bracket'], ['_element']],
+        '|': [],
+        ';': [],
+        ')': [],
+        '}': [],
+        ']': []
+    },
+    'paren': {
+        '(': ['(', ['expression'], ')']
+    },
+    'brace': {
+        '{': ['{', ['expression'], '}']
+    },
+    'bracket': {
+        '[': ['[', ['expression'], ']']
+    },
 };
 console.log(JSON.stringify(parser(tokens, parsing_table)));
