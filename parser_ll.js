@@ -34,7 +34,7 @@ module.exports = parser = function (tokens, parsing_table) {
             }
         } else if (stack[0] === undefined) {
             // リターン記号
-            const symbol = stack.shift();
+            stack.shift();
             rules.push([undefined]);
         }
     }
