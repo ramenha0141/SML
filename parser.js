@@ -62,7 +62,7 @@ function parser(tokens, parsing_table) {
     }
     return tree().child[0];
 }
-const $ = { identifier: Symbol.for('identifier'), string: Symbol.for('string') };
+const $ = { identifier: Symbol.for('identifier'), string: Symbol.for('string'), $: Symbol.for('$') };
 const tokens = [{type: 'identifier', value: 'def'}, '=', {type: 'string', value: "'str'"}, {type: 'identifier', value: 'def2'}, '|', '(', {type: 'string', value: "'str2'"}, ')', ';'];
 const parsing_table = {
     'S': {
@@ -72,7 +72,7 @@ const parsing_table = {
         [$.identifier]: [['_sml']]
     },
     '_sml': {
-        [$.identifier]: [['define'], ';' ['_sml']],
+        [$.identifier]: [['define'], ';', ['_sml']],
         [$.$]: []
     },
     'define': {
@@ -127,7 +127,6 @@ const parsing_table = {
         '[': ['[', ['expression'], ']']
     },
 };
-console.log(JSON.stringify(parser(tokens, parsing_table)));
-//module.exports = function (tokens) {
-//    return parser(tokens, parsing_table);
-//}
+module.exports = function (tokens) {
+    return parser(tokens, parsing_table);
+}

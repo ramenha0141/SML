@@ -2,13 +2,13 @@ const fs = require('fs');
 const lexer = require('./lexer.js');
 const Parser = require('./parser.js');
 function compile (option) {
-    const abstractor = require('./abstractor.js');
     const input = fs.readFileSync(option.filename, 'utf-8');
     const tokens = lexer(input);
     const st = Parser(tokens);
+    console.log(JSON.stringify(st));
 }
 const args = process.argv.slice(2);
-const option = {};
+const option = {filename: 'old/sml.syntax'};
 for (let i = 0; i < args.length; i++) {
     const arg = args[i];
     switch (arg) {
