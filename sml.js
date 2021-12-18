@@ -2,10 +2,14 @@ const fs = require('fs');
 const lexer = require('./lexer.js');
 const Parser = require('./parser.js');
 function compile (option) {
-    const input = fs.readFileSync(option.filename, 'utf-8');
-    const tokens = lexer(input);
-    const st = Parser(tokens);
-    console.log(JSON.stringify(st));
+    try {
+        const input = fs.readFileSync(option.filename, 'utf-8');
+        const tokens = lexer(input);
+        const st = Parser(tokens);
+        console.log(JSON.stringify(st));
+    } catch (e) {
+        console.error(`\u001b[31m\u001b[1mError! \u001b[0m${e}`);
+    }
 }
 const args = process.argv.slice(2);
 const option = {filename: 'sml.syntax'};

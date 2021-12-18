@@ -8,11 +8,23 @@ function parser(tokens, parsing_table) {
             // 非終端記号
             const symbol = stack.shift();
             if (typeof tokens[0] === 'string') {
-                stack.unshift(...parsing_table[symbol[0]][tokens[0]], undefined);
-                rules.push(symbol);
+                if (parsing_table[symbol[0]][tokens[0]]) {
+                    stack.unshift(...parsing_table[symbol[0]][tokens[0]], undefined);
+                    rules.push(symbol);
+                } else {
+                    throw `SyntaxError: Unexpected token '${tokens[0]}'.`;
+                }
             } else {
-                stack.unshift(...parsing_table[symbol[0]][Symbol.for(tokens[0].type)], undefined);
-                rules.push(symbol);
+                if (parsing_table[symbol[0]][Symbol.for(tokens[0].type)]) {
+                    stack.unshift(...parsing_table[symbol[0]][Symbol.for(tokens[0].type)], undefined);
+                    rules.push(symbol);
+                } else {
+                    if (tokens[0].type === '$') {
+                        throw `SyntaxError: Unexpected end of file.`
+                    } else {
+                        throw `SyntaxError: Unexpected token '${tokens[0].value}'.`;
+                    }
+                }
             }
         } else if (typeof stack[0] === 'string') {
             // 終端記号
@@ -20,7 +32,7 @@ function parser(tokens, parsing_table) {
             if (typeof tokens[0] === 'string' ? tokens[0] === symbol : tokens[0].value === symbol) {
                 rules.push(typeof tokens[0] === 'string' ? tokens.shift() : tokens.shift().value);
             } else {
-                console.error(`${typeof tokens[0] === 'string' ? tokens[0] : tokens[0].value} token is not ${symbol}`);
+                throw `SyntaxError: Unexpected token '${typeof tokens[0] === 'string' ? tokens[0] : tokens[0].value}', ${symbol} expected.`;
             }
         } else if (stack[0] === Symbol.for('$')) {
             stack.shift();
@@ -30,7 +42,7 @@ function parser(tokens, parsing_table) {
             if (tokens[0].type === Symbol.keyFor(symbol)) {
                 rules.push(tokens.shift().value);
             } else {
-                console.error(`${tokens.shift().value} token type is not ${Symbol.keyFor(symbol)}`);
+                throw `SyntaxError: Unexpected token '${typeof tokens[0] === 'string' ? tokens[0] : tokens[0].value}', ${Symbol.keyFor(symbol)} type expected.`;
             }
         } else if (stack[0] === undefined) {
             // リターン記号
