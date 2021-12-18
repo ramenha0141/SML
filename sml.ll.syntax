@@ -4,12 +4,14 @@ define = @identifier '=' expression;
 expression = element _expression;
 _expression = '|' element _expression | ε;
 element = _element;
-_element = @string _element
-         | @identifier _element
+_element = string _element
+         | identifier _element
          | paren _element
          | brace _element
          | bracket _element
          | ε;
+string = @string;
+identifier = @identifier;
 paren = '(' expression ')';
 brace = '{' expression '}';
 bracket = '[' expression ']';

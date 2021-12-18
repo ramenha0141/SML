@@ -63,7 +63,7 @@ function parser(tokens, parsing_table) {
     return tree().child[0];
 }
 const $ = { identifier: Symbol.for('identifier'), string: Symbol.for('string') };
-const tokens = [{type: 'identifier', value: 'def'}, {value: '='}, {type: 'string', value: 'str'}, {type: 'identifier', value: 'def2'}, {value: '|'}, {value: '('}, {type: 'string', value: 'str2'}, {value: ')'}, {value: ';'}];
+const tokens = [{type: 'identifier', value: 'def'}, {value: '='}, {type: 'string', value: "'str'"}, {type: 'identifier', value: 'def2'}, {value: '|'}, {value: '('}, {type: 'string', value: "'str2'"}, {value: ')'}, {value: ';'}];
 const parsing_table = {
     'S': {
         [$.identifier]: [['sml'], $.$]
@@ -100,8 +100,8 @@ const parsing_table = {
         '{': [['_element']]
     },
     '_element': {
-        [$.string]: [$.string, ['_element']],
-        [$.identifier]: [$.identifier, ['_element']],
+        [$.string]: [['string'], ['_element']],
+        [$.identifier]: [['identifier'], ['_element']],
         '(': [['paren'], ['_element']],
         '{': [['brace'], ['_element']],
         '[': [['bracket'], ['_element']],
@@ -110,6 +110,12 @@ const parsing_table = {
         ')': [],
         '}': [],
         ']': []
+    },
+    'string': {
+        [$.string]: [$.string]
+    },
+    'identifier': {
+        [$.identifier]: [$.identifier]
     },
     'paren': {
         '(': ['(', ['expression'], ')']
