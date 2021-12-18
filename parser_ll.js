@@ -1,4 +1,4 @@
-module.exports = parser = function (tokens, parsing_table) {
+function parser (tokens, parsing_table) {
     // LL法構文解析
     const stack = [['S']];
     const rules = [];

@@ -1,10 +1,9 @@
-sml = sml_ sml | ε;
-sml_ = define ';';
+sml = _sml sml | ε;
+_sml = define ';';
 define = identifier '=' expression;
 expression = element '|' expression;
-element = element_ element | ε;
-element_ = str_s
-         | str_d
+element = _element element | ε;
+_element = string
          | identifier
          | paren
          | brace
