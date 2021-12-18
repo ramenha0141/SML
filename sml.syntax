@@ -1,12 +1,17 @@
-sml = define {';' define};
-define = identifier '=' expression;
-expression = element {'|' element};
-element = { str_s
-          | str_d
-          | identifier
-          | paren
-          | brace
-          | bracket};
+sml = _sml;
+_sml = define ';' _sml | ε;
+define = @identifier '=' expression;
+expression = element _expression;
+_expression = '|' element _expression | ε;
+element = _element;
+_element = string _element
+         | identifier _element
+         | paren _element
+         | brace _element
+         | bracket _element
+         | ε;
+string = @string;
+identifier = @identifier;
 paren = '(' expression ')';
 brace = '{' expression '}';
 bracket = '[' expression ']';

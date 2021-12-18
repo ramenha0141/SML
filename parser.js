@@ -1,215 +1,130 @@
-function log (data) {
-    process.stdout.moveCursor(0, -1);
-    process.stdout.clearLine(0);
-    process.stdout.write(data + '\n');
-}
-Array.prototype.read = function (entry = 0) {
-    return this[entry];
-}
-Array.prototype.next = function () {
-    return {type:'value',value:this.shift()};
-}
-String.prototype.nextif = function (tokens, read) {
-    if (tokens.read() == this.slice()) {
-        return tokens.next();
-    } else {
-        if (read) {
-            return false;
-        } else {
-            console.error('Syntax error on token "' + tokens.read() + '"');
-        }
-    }
-}
-Array.prototype.test = function (...elements) {
-    const _tokens = this.slice();
-    let result = true;
-    const read = elements.pop();
-    for (let i = 0; i < elements.length; i++) {
-        if (typeof elements[i] == 'function') {
-            result = result && elements[i](_tokens, read);
-        } else if (typeof elements[i] == 'object') {
-            const __tokens = _tokens.slice();
-            if (elements[i][0] == 'paren') {
-                result = result && elements[i][1](_tokens, read);
-            } else if (elements[i][0] == 'brace') {
-                while (elements[i][1](__tokens, true)) {
-                    elements[i][1](_tokens);
-                }
-            } else if (elements[i][0] == 'bracket') {
-                if (elements[i][1](__tokens, true)) {
-                    elements[i][1](_tokens);
-                }
-            }
-        } else {
-            result = result && elements[i].nextif(_tokens, read);
-        }
-    }
-    return result;
-}
-Array.prototype.parse = function (...elements) {
-    const tokens = this;
-    const st = elements.pop();
-    for (let i = 0; i < elements.length; i++) {
-        if (typeof elements[i] == 'function') {
-            st.child.push(elements[i](tokens));
-        } else if (typeof elements[i] == 'object') {
-            const _tokens = tokens.slice();
-            if (elements[i][0] == 'paren') {
-                st.child.push(...elements[i][1](tokens).child);
-            } else if (elements[i][0] == 'brace') {
-                while (elements[i][1](_tokens, true)) {
-                    st.child.push(...elements[i][1](tokens).child);
-                }
-            } else if (elements[i][0] == 'bracket') {
-                if (elements[i][1](_tokens, true)) {
-                    st.child.push(...elements[i][1](tokens).child);
-                }
-            }
-        } else {
-            st.child.push(elements[i].nextif(tokens));
-        }
-    }
-}
-module.exports = class Parser {
-    static sml (tokens, read) {
-        const st = {type:'sml',child:[]};
-        if (tokens.test(Parser.define, ['brace', Parser._sml_1], read)) {
-            tokens.parse(Parser.define, ['brace', Parser._sml_1], st);
-        } else {
-            return false;
-        }
-        log(`Successfully Parsed ${st.child.length} defines\r\n`);
-        return st;
-    }
-    static _sml_1 (tokens, read) {
-        const st = {type:'_sml_1',child:[]};
-        if (tokens.test(';', Parser.define, read)) {
-            tokens.parse(';', Parser.define, st);
-        } else {
-            return false;
-        }
-        return st;
-    }
-    static define (tokens, read) {
-        const st = {type:'define',child:[]};
-        if (tokens.test(Parser.identifier, '=', Parser.expression, read)) {
-            tokens.parse(Parser.identifier, '=', Parser.expression, st);
-        } else {
-            return false;
-        }
-        log(`Parsing : ${st.child[0].child[0].value}`);
-        return st;
-    }
-    static expression (tokens, read) {
-        const st = {type:'expression',child:[]};
-        if (tokens.test(Parser.element, ['brace', Parser._expression_1], read)) {
-            tokens.parse(Parser.element, ['brace', Parser._expression_1], st);
-        } else {
-            return false;
-        }
-        return st;
-    }
-    static _expression_1 (tokens, read) {
-        const st = {type:'_expression_1',child:[]};
-        if (tokens.test('|', Parser.element, read)) {
-            tokens.parse('|', Parser.element, st);
-        } else {
-            return false;
-        }
-        return st;
-    }
-    static element (tokens, read) {
-        const st = {type:'element',child:[]};
-        if (tokens.test(['brace', Parser._element_1], read)) {
-            tokens.parse(['brace', Parser._element_1], st);
-        } else {
-            return false;
-        }
-        return st;
-    }
-    static _element_1 (tokens, read) {
-        const st = {type:'_element_1',child:[]};
-        if (tokens.test(Parser.str_s, true)) {
-            tokens.parse(Parser.str_s, st);
-        } else if (tokens.test(Parser.str_d, true)) {
-            tokens.parse(Parser.str_d, st);
-        } else if (tokens.test(Parser.identifier, true)) {
-            tokens.parse(Parser.identifier, st);
-        } else if (tokens.test(Parser.paren, true)) {
-            tokens.parse(Parser.paren, st);
-        } else if (tokens.test(Parser.brace, true)) {
-            tokens.parse(Parser.brace, st);
-        } else if (tokens.test(Parser.bracket, true)) {
-            tokens.parse(Parser.bracket, st);
-        } else {
-            return false;
-        }
-        return st;
-    }
-    static paren (tokens, read) {
-        const st = {type:'paren',child:[]};
-        if (tokens.test('(', Parser.expression, ')', read)) {
-            tokens.parse('(', Parser.expression, ')', st);
-        } else {
-            return false;
-        }
-        return st;
-    }
-    static brace (tokens, read) {
-        const st = {type:'brace',child:[]};
-        if (tokens.test('{', Parser.expression, '}', read)) {
-            tokens.parse('{', Parser.expression, '}', st);
-        } else {
-            return false;
-        }
-        return st;
-    }
-    static bracket (tokens, read) {
-        const st = {type:'bracket',child:[]};
-        if (tokens.test('[', Parser.expression, ']', read)) {
-            tokens.parse('[', Parser.expression, ']', st);
-        } else {
-            return false;
-        }
-        return st;
-    }
-    static identifier (tokens, read) {
-        const st = {type:'identifier',child:[]};
-        if (/^[a-zA-Z\-][a-zA-Z\-_]*$/.test(tokens.read())) {
-            st.child.push(tokens.next());
-        } else {
-            if (read) {
-                return false;
+function parser(tokens, parsing_table) {
+    // LL法構文解析
+    const stack = [['S']];
+    const rules = [];
+    tokens.push({ type: '$' });
+    while (stack.length > 0) {
+        if (typeof stack[0] === 'object') {
+            // 非終端記号
+            const symbol = stack.shift();
+            if (tokens[0].type === undefined) {
+                stack.unshift(...parsing_table[symbol[0]][tokens[0].value], undefined);
+                rules.push(symbol);
             } else {
-                console.log('Syntax error on token "' + tokens.read() + '": identifier expected.');
+                stack.unshift(...parsing_table[symbol[0]][Symbol.for(tokens[0].type)], undefined);
+                rules.push(symbol);
             }
-        }
-        return st;
-    }
-    static str_s (tokens, read) {
-        const st = {type:'str',child:[]};
-        if (/^'(?:\\[\s\S]|[^'\r\n\\])*'$/.test(tokens.read())) {
-            st.child.push(tokens.next());
-        } else {
-            if (read == true) {
-                return false;
+        } else if (typeof stack[0] === 'string') {
+            // 終端記号
+            const symbol = stack.shift();
+            if (tokens[0].value === symbol) {
+                rules.push(tokens.shift().value);
             } else {
-                console.log('Syntax error on token "' + tokens.read() + '": string expected.');
+                console.error(`${tokens.shift().value} token is not ${symbol}`);
             }
-        }
-        return st;
-    }
-    static str_d (tokens, read) {
-        const st = {type:'str',child:[]};
-        if (/^"(?:\\[\s\S]|[^"\r\n\\])*"$/.test(tokens.read())) {
-            st.child.push(tokens.next());
-        } else {
-            if (read) {
-                return false;
+        } else if (stack[0] === Symbol.for('$')) {
+            stack.shift();
+        } else if (typeof stack[0] === 'symbol') {
+            // 特殊終端記号
+            const symbol = stack.shift();
+            if (tokens[0].type === Symbol.keyFor(symbol)) {
+                rules.push(tokens.shift().value);
             } else {
-                console.log('Syntax error on token "' + tokens.read() + '": string expected.');
+                console.error(`${tokens.shift().value} token type is not ${Symbol.keyFor(symbol)}`);
+            }
+        } else if (stack[0] === undefined) {
+            // リターン記号
+            stack.shift();
+            rules.push([undefined]);
+        }
+    }
+    // ST構築
+    function tree(type) {
+        const st = { type: type, child: [] };
+        while (rules.length > 0) {
+            if (typeof rules[0] === 'string') {
+                st.child.push(rules.shift());
+            } else if (typeof rules[0][0] === 'string') {
+                const _st = tree(rules.shift()[0]);
+                if (_st.child.length > 0) {
+                    if (_st.type.slice(0, 1) === '_') {
+                        st.child.push(..._st.child);
+                    } else {
+                        st.child.push(_st);
+                    }
+                }
+            } else if (rules[0][0] === undefined) {
+                rules.shift();
+                return st;
             }
         }
         return st;
     }
+    return tree().child[0];
+}
+const $ = { identifier: Symbol.for('identifier'), string: Symbol.for('string') };
+const tokens = [{type: 'identifier', value: 'def'}, {value: '='}, {type: 'string', value: "'str'"}, {type: 'identifier', value: 'def2'}, {value: '|'}, {value: '('}, {type: 'string', value: "'str2'"}, {value: ')'}, {value: ';'}];
+const parsing_table = {
+    'S': {
+        [$.identifier]: [['sml'], $.$]
+    },
+    'sml': {
+        [$.identifier]: [['_sml']]
+    },
+    '_sml': {
+        [$.identifier]: [['define'], ';' ['_sml']],
+        [$.$]: []
+    },
+    'define': {
+        [$.identifier]: [$.identifier, '=', ['expression']]
+    },
+    'expression': {
+        [$.string]: [['element'], ['_expression']],
+        [$.identifier]: [['element'], ['_expression']],
+        '(': [['element'], ['_expression']],
+        '{': [['element'], ['_expression']],
+        '[': [['element'], ['_expression']]
+    },
+    '_expression': {
+        '|': ['|', ['element'], ['_expression']],
+        ';': [],
+        ')': [],
+        '}': [],
+        ']': []
+    },
+    'element': {
+        [$.string]: [['_element']],
+        [$.identifier]: [['_element']],
+        '(': [['_element']],
+        '{': [['_element']],
+        '{': [['_element']]
+    },
+    '_element': {
+        [$.string]: [['string'], ['_element']],
+        [$.identifier]: [['identifier'], ['_element']],
+        '(': [['paren'], ['_element']],
+        '{': [['brace'], ['_element']],
+        '[': [['bracket'], ['_element']],
+        '|': [],
+        ';': [],
+        ')': [],
+        '}': [],
+        ']': []
+    },
+    'string': {
+        [$.string]: [$.string]
+    },
+    'identifier': {
+        [$.identifier]: [$.identifier]
+    },
+    'paren': {
+        '(': ['(', ['expression'], ')']
+    },
+    'brace': {
+        '{': ['{', ['expression'], '}']
+    },
+    'bracket': {
+        '[': ['[', ['expression'], ']']
+    },
 };
+console.log(JSON.stringify(parser(tokens, parsing_table)));
