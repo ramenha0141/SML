@@ -47,7 +47,11 @@ module.exports = parser = function (tokens, parsing_table) {
             } else if (typeof rules[0][0] === 'string') {
                 const _st = tree(rules.shift()[0]);
                 if (_st.child.length > 0) {
-                    st.child.push(_st);
+                    if (_st.type.slice(0, 1) === '_') {
+                        st.child.push(..._st.child);
+                    } else {
+                        st.child.push(_st);
+                    }
                 }
             } else if (rules[0][0] === undefined) {
                 rules.shift();
@@ -65,11 +69,11 @@ const parsing_table = {
         [$.number] : [['exp']]
     },
     'exp' : {
-        [$.number] : [$.number, ['exp_']]
+        [$.number] : [$.number, ['_exp']]
     },
-    'exp_' : {
-        '+' : ['+', $.number, ['exp_']],
-        '-' : ['-', $.number, ['exp_']],
+    '_exp' : {
+        '+' : ['+', $.number, ['_exp']],
+        '-' : ['-', $.number, ['_exp']],
         [$.$] : [$.$]
     }
 };
