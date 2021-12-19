@@ -96,7 +96,11 @@ function parser(tokens, parsing_table) {
         for (let i = 0; i < st.child.length; i++) {
             switch (st.child[i].type) {
                 case 'identifier': {
-                    s.push([st.child[i].child[0]]);
+                    if (st.child[i].child[0].substr(0, 1) === '@') {
+                        s.push(Symbol.for(st.child[i].child[0].slice(1)));
+                    } else {
+                        s.push([st.child[i].child[0]]);
+                    }
                     break;
                 }
                 case 'string': {
