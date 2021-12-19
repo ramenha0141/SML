@@ -1,4 +1,4 @@
-module.exports = function parser(tokens) {
+module.exports = function Parser(tokens) {
     // LL法構文解析
     const stack = [[Object.keys(parsing_table)[0]]];
     const rules = [];

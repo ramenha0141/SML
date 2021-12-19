@@ -1,10 +1,10 @@
 const fs = require('fs');
-const lexer = require('./lexer.js');
+const Lexer = require('./lexer.js');
 const Parser = require('./parser.js');
 function compile(option) {
     try {
         const input = fs.readFileSync(option.filename, 'utf-8');
-        const tokens = lexer(input);
+        const tokens = Lexer(input);
         const st = Parser(tokens);
         console.log(JSON.stringify(st));
     } catch (e) {

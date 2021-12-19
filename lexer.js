@@ -1,4 +1,4 @@
-module.exports = function (code) {
+module.exports = function Lexer (code) {
     const tokenize_pattern = /("(?:\\[\s\S]|[^"\r\n\\])*"|'(?:\\[\s\S]|[^'\r\n\\])*'|[()\[\]{}=;|+ε]|[@a-zA-Z\-_][a-zA-Z\-_]*)/g;
     const _tokens = code.match(tokenize_pattern) || [];
     const tokens = [];
