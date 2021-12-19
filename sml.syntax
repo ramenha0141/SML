@@ -3,13 +3,14 @@ _sml = define ';' _sml | ε;
 define = @identifier '=' expression;
 expression = element _expression;
 _expression = '|' element _expression | ε;
-element = _element | 'ε';
+element = _element | epsilon;
 _element = string _element
          | identifier _element
          | paren _element
          | brace _element
          | bracket _element
          | ε;
+epsilon = 'ε';
 string = @string;
 identifier = @identifier;
 paren = '(' expression ')';

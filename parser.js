@@ -74,8 +74,44 @@ function parser(tokens, parsing_table) {
     }
     // AST構築
     const ast = {};
-
-    return tree().child[0];
+    function sml(st) {
+        for (let i = 0; i < st.child.length; i += 2) {
+            define(st.child[i]);
+        }
+    }
+    function define(st) {
+        const A = st.child[0];
+        const s = expression(st.child[2]);
+        ast[A] = s;
+    }
+    function expression(st) {
+        const s = [];
+        for (let i = 0; i < st.child.length; i += 2) {
+            s.push(element(st.child[i]));
+        }
+        return s;
+    }
+    function element(st) {
+        const s = [];
+        for (let i = 0; i < st.child.length; i++) {
+            switch (st.child[i].type) {
+                case 'identifier': {
+                    s.push([st.child[i].child[0]]);
+                    break;
+                }
+                case 'string': {
+                    s.push(st.child[i].child[0].slice(1, -1));
+                    break;
+                }
+                case 'epsilon': {
+                    return 'ε';
+                }
+            }
+        }
+        return s;
+    }
+    sml(tree().child[0]);
+    return ast;
 }
 const $ = { identifier: Symbol.for('identifier'), string: Symbol.for('string'), $: Symbol.for('$') };
 const parsing_table = {
@@ -109,7 +145,7 @@ const parsing_table = {
         '(': [['_element']],
         '{': [['_element']],
         '{': [['_element']],
-        'ε': ['ε']
+        'ε': [['epsilon']]
     },
     '_element': {
         [$.string]: [['string'], ['_element']],
@@ -122,6 +158,9 @@ const parsing_table = {
         ')': [],
         '}': [],
         ']': []
+    },
+    'epsilon': {
+        'ε': ['ε']
     },
     'string': {
         [$.string]: [$.string]
