@@ -1,6 +1,6 @@
 function parser(tokens, parsing_table) {
     // LL法構文解析
-    const stack = [['S']];
+    const stack = [[Object.keys(parsing_table)[0]]];
     const rules = [];
     tokens.push({ type: '$' });
     while (stack.length > 0) {
@@ -72,13 +72,13 @@ function parser(tokens, parsing_table) {
         }
         return st;
     }
+    // AST構築
+    const ast = {};
+
     return tree().child[0];
 }
 const $ = { identifier: Symbol.for('identifier'), string: Symbol.for('string'), $: Symbol.for('$') };
 const parsing_table = {
-    'S': {
-        [$.identifier]: [['sml'], $.$]
-    },
     'sml': {
         [$.identifier]: [['_sml']]
     },
