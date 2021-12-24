@@ -5,8 +5,7 @@ function compile(option) {
     try {
         const input = fs.readFileSync(option.filename, 'utf-8');
         const tokens = Lexer(input);
-        const st = Parser(tokens);
-        console.log(JSON.stringify(st));
+        const ast = Parser(tokens);
     } catch (e) {
         console.error(`\u001b[31m\u001b[1mError! \u001b[0m${e}`);
     }
