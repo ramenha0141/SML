@@ -120,7 +120,8 @@ module.exports = function Parser(tokens) {
 const $ = { identifier: Symbol.for('identifier'), string: Symbol.for('string'), $: Symbol.for('$') };
 const parsing_table = {
     'sml': {
-        [$.identifier]: [['_sml'], $.$]
+        [$.identifier]: [['_sml'], $.$],
+        [$.$]: []
     },
     '_sml': {
         [$.identifier]: [['define'], ';', ['_sml']],
