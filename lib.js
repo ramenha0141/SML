@@ -37,7 +37,7 @@ module.exports = function (ast) {
     for (let i = 0; i < ast_keys.length; i++) {
         follow_memo[ast_keys[i]] = [];
     }
-    function follow_calc() {
+    function calc_follow() {
         for (let i = 0; i < ast_keys.length; i++) {
             if (i === 0) {
                 follow_memo[ast_keys[0]].push(Symbol.for('$'));
@@ -70,7 +70,7 @@ module.exports = function (ast) {
     function comp_follow() {
         old_count = new_count;
         new_count = 0;
-        follow_calc();
+        calc_follow();
         for (let i = 0; i < ast_keys.length; i++) {
             new_count += follow_memo[ast_keys[i]].length;
         }
