@@ -28,7 +28,7 @@ module.exports = function (ast) {
                     firsts.splice(firsts.indexOf(Symbol.for('ε')), 1);
                     firsts.push(..._first(s.slice(1)));
                 }
-                return firsts;
+                return [...new Set(firsts)];
             }
         }
     }
@@ -62,6 +62,8 @@ module.exports = function (ast) {
                     }
                 }
             }
+        }
+        for (let i = 0; i < ast_keys.length; i++) {
             follow_memo[ast_keys[i]] = [...new Set(follow_memo[ast_keys[i]])];
         }
     }
@@ -78,9 +80,8 @@ module.exports = function (ast) {
     }
     let count = 0;
     while(!comp_follow()) {count++}
-    console.log(count);
     function follow(A) {
         return follow_memo[A];
     }
-    return { first, follow };
+    return { first, _first, follow, count };
 }

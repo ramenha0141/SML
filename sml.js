@@ -1,11 +1,14 @@
 const fs = require('fs');
 const Lexer = require('./lexer.js');
 const Parser = require('./parser.js');
+const Generator = require('./generator');
 function compile(option) {
     try {
         const input = fs.readFileSync(option.filename, 'utf-8');
         const tokens = Lexer(input);
         const ast = Parser(tokens);
+        const output = Generator(ast);
+        fs.writeFileSync(option.outputfilename || `${option.filename}.js`, output);
     } catch (e) {
         console.error(`\u001b[31m\u001b[1mError! \u001b[0m${e}`);
     }
