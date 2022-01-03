@@ -78,48 +78,5 @@ module.exports = function Parser(tokens) {
         }
         return st;
     }
-    // AST構築
-    const ast = {};
-    function sml(st) {
-        for (let i = 0; i < st.child.length; i += 2) {
-            define(st.child[i]);
-        }
-    }
-    function define(st) {
-        const A = st.child[0];
-        const s = expression(st.child[2]);
-        ast[A] = s;
-    }
-    function expression(st) {
-        const s = [];
-        for (let i = 0; i < st.child.length; i += 2) {
-            s.push(element(st.child[i]));
-        }
-        return s;
-    }
-    function element(st) {
-        const s = [];
-        for (let i = 0; i < st.child.length; i++) {
-            switch (st.child[i].type) {
-                case 'identifier': {
-                    if (st.child[i].child[0].slice(0, 1) === '@') {
-                        s.push(Symbol.for(st.child[i].child[0].slice(1)));
-                    } else {
-                        s.push([st.child[i].child[0]]);
-                    }
-                    break;
-                }
-                case 'string': {
-                    s.push(st.child[i].child[0].slice(1, -1));
-                    break;
-                }
-                case 'epsilon': {
-                    return 'ε';
-                }
-            }
-        }
-        return s;
-    }
-    sml(tree().child[0]);
-    return ast;
+    return tree().child[0];
 }
