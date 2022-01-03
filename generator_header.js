@@ -59,7 +59,13 @@ module.exports = function Parser(tokens) {
             } else if (typeof rules[0][0] === 'string') {
                 const _st = tree(rules.shift()[0]);
                 if (_st.child.length > 0) {
-                    if (_st.type.slice(0, 1) === '_') {
+                    if (_st.type.slice(0, 2) === '__') {
+                        if (_st.child.length === 1) {
+                            st.child.push(...st.child);
+                        } else {
+                            st.child.push(_st);
+                        }
+                    } else if (_st.type.slice(0, 1) === '_') {
                         st.child.push(..._st.child);
                     } else {
                         st.child.push(_st);
