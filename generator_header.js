@@ -61,7 +61,7 @@ module.exports = function Parser(tokens) {
                 if (_st.child.length > 0) {
                     if (_st.type.slice(0, 2) === '__') {
                         if (_st.child.length === 1) {
-                            st.child.push(...st.child);
+                            st.child.push(..._st.child);
                         } else {
                             st.child.push(_st);
                         }
