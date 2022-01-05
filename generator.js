@@ -1,5 +1,11 @@
 module.exports = function Generator(ast) {
     const { first, _first, follow } = require('./lib.js')(ast);
+    function symbol_wrap (symbol_or_string) {
+        if (typeof symbol_or_string === 'symbol') {
+            return Symbol.keyFor(symbol_or_string);
+        }
+        return symbol_or_string;
+    }
     const parsing_table = {};
     const ast_keys = Object.keys(ast);
     for (let i = 0; i < ast_keys.length; i++) {
@@ -14,7 +20,7 @@ module.exports = function Generator(ast) {
                 if (parsing_table[ast_keys[i]][firsts[k]] === undefined) {
                     parsing_table[ast_keys[i]][firsts[k]] = s;
                 } else {
-                    throw `Generation Error: This rule cannot parse by LL(1).\nRule '${ast_keys[i]}', Lookahead'${firsts[k]}', Conflict between ${JSON.stringify(parsing_table[ast_keys[i]][firsts[k]])} and ${JSON.stringify(s)}.`;
+                    throw `Generation Error: This rule cannot parse by LL(1).\nRule '${ast_keys[i]}', Lookahead'${symbol_wrap(firsts[k])}', Conflict between ${JSON.stringify(parsing_table[ast_keys[i]][firsts[k]])} and ${JSON.stringify(s)}.`;
                 }
             }
         }
@@ -24,7 +30,7 @@ module.exports = function Generator(ast) {
                 if (parsing_table[ast_keys[i]][follows[j]] === undefined) {
                     parsing_table[ast_keys[i]][follows[j]] = [];
                 } else {
-                    throw `Generation Error: This rule cannot parse by LL(1).\nRule '${ast_keys[i]}', Lookahead'${follows[j]}', Conflict between ${JSON.stringify(parsing_table[ast_keys[i]][follows[j]])} and ${JSON.stringify([])}.`;
+                    throw `Generation Error: This rule cannot parse by LL(1).\nRule '${ast_keys[i]}', Lookahead'${symbol_wrap(follows[j])}', Conflict between ${JSON.stringify(parsing_table[ast_keys[i]][follows[j]])} and ${JSON.stringify([])}.`;
                 }
             }
         }
