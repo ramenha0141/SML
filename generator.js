@@ -2,7 +2,7 @@ module.exports = function Generator(ast) {
     const { first, _first, follow } = require('./lib.js')(ast);
     function symbol_wrap (symbol_or_string) {
         if (typeof symbol_or_string === 'symbol') {
-            return Symbol.keyFor(symbol_or_string);
+            return `Symbol(${Symbol.keyFor(symbol_or_string)})`;
         }
         return symbol_or_string;
     }
